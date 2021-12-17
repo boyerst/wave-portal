@@ -11,3 +11,6 @@ artifacts
 
 .hardhat.config.js
 hardhat.config.js
+
+waveportal.notes
+.waveportal.notes

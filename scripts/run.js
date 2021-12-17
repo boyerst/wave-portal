@@ -7,7 +7,11 @@
 
 
 const main = async () => {
-  
+  // Added this after adding wave() and getTotalWaves()
+  // We need a wallet address in order to deploy to the blockchain
+  // Harhat does this automatically but the following grabs the contract owner address and a random address
+    // randomPerson simulates an external address calling your functions
+  const [owner, randomPerson] = await hre.ethers.getSigners();
   // Compiles our contract and generates files we need to work with our contract
     // Stores them in /artifacts
     // HRE = Hardhat Runtime Environment
@@ -23,6 +27,26 @@ const main = async () => {
   await waveContract.deployed();
   // Contract deploys to waveContract.address which will give us the address of the deployed contract
   console.log("Contract deployed to:", waveContract.address);
+  console.log("Contract deployed by:", owner.address);
+
+  // We added these bevcause we need to manually call our functions (similar to an API)
+  // Call getTotalWaves() to get total waves
+  let waveCount;
+  waveCount = await waveContract.getTotalWaves();
+  // Call the wave() contract
+    // Adds wave to totalWaves state var
+  let waveTxn = await waveContract.wave();
+  await waveTxn.wait();
+  // Call the waveCount one more time to see changes...
+    // Reads the new value
+  waveCount = await waveContract.getTotalWaves();
+
+  // Simulates other people calling our functions
+  waveTxn = await waveContract.connect(randomPerson).wave();
+  await waveTxn.wait();
+  // Call the waveCount another time to see if random person called the function
+    // Reads new value
+  waveCount = await waveContract.getTotalWaves();
 
 };
 

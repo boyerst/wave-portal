@@ -10,16 +10,49 @@ contract WavePortal {
   // State var initialized to 0 (permanent in contact storage)
   uint256 totalWaves;
 
+  // Wave event, emits in wave function
+  event NewWave(address indexed from, uint256 timestamp, string message);
+
+
+
+  // We create a wave struct to denote the properties of the wave
+  struct Wave {
+      address waver; // The address of the user who waved.
+      string message; // The message the user sent.
+      uint256 timestamp; // The timestamp when the user waved.
+  }
+
+
+   // Here we declare a variable waves that allows us to store an array of structs
+    // This will hold all of our waves
+  Wave[] waves;
+
+
+
+
+
   constructor() {
     console.log("Here's the contract!");
 
   }
 
-
-  function wave() public {
+  // REFACTOR: Now requires a string called _message that the users will write to us from the from end
+  function wave(string memory _message) public {
     // Assignment operator (Add and Assignment) adds R operand to L and assigns result to L operand
     totalWaves += 1;
-    console.log("%s has waived!", msg.sender);
+    console.log("%s has waived!", msg.sender, _message);
+    // Now we push the users' 'wave' data to the waves array
+      // incl. who, message, what time
+    waves.push(Wave(msg.sender, _message, block.timestamp));
+    // Now we emit the wave as an event
+    emit NewWave(msg.sender, block.timestamp, _message);
+
+  }
+
+  // This function will return our struct array to us 
+    // Allows us to grab the waves from the front end
+  function getAllWaves() public view returns (Wave[] memory) {
+      eturn waves;
   }
 
   // Public = can be called from anywhere (internal or message-calls)

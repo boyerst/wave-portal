@@ -52,7 +52,7 @@ contract WavePortal {
   // This function will return our struct array to us 
     // Allows us to grab the waves from the front end
   function getAllWaves() public view returns (Wave[] memory) {
-      eturn waves;
+    return waves;
   }
 
   // Public = can be called from anywhere (internal or message-calls)

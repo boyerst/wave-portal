@@ -5,24 +5,39 @@
 
 
 
+// const main = async () => {
+//   // Grabs wallet address of the deployer of the contract
+//   const [deployer] = await hre.ethers.getSigners();
+//   // Grabs balance of account of the deployer of the contract
+//   const accountBalance = await deployer.getBalance();
+
+
+//   console.log('Deploying contracts with account: ', deployer.address);
+//   console.log('Account balance: ', accountBalance.toString());
+
+//   // Grabs our contract address
+//   const Token = await hre.ethers.getContractFactory('WavePortal');
+//   // Deploys our contract 
+//   const portal = await Token.deploy();
+//   // The code waits for the contract to be deployed
+//   await portal.deployed();
+
+//   console.log('WavePortal address: ', portal.address);
+// };
+
+// REFACTOR: New deploy.js script
+
 const main = async () => {
-  // Grabs wallet address of the deployer of the contract
-  const [deployer] = await hre.ethers.getSigners();
-  // Grabs balance of account of the deployer of the contract
-  const accountBalance = await deployer.getBalance();
+  const waveContractFactory = await hre.ethers.getContractFactory("WavePortal");
+  // Funds contract when deployed
+  const waveContract = await waveContractFactory.deploy({
+    value: hre.ethers.utils.parseEther("0.001"),
+  });
 
+  // Makes it easy to see when it's deployed
+  await waveContract.deployed();
 
-  console.log('Deploying contracts with account: ', deployer.address);
-  console.log('Account balance: ', accountBalance.toString());
-
-  // Grabs our contract address
-  const Token = await hre.ethers.getContractFactory('WavePortal');
-  // Deploys our contract 
-  const portal = await Token.deploy();
-  // The code waits for the contract to be deployed
-  await portal.deployed();
-
-  console.log('WavePortal address: ', portal.address);
+  console.log("WavePortal address: ", waveContract.address);
 };
 
 const runMain = async () => {

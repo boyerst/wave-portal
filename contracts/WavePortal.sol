@@ -47,6 +47,17 @@ contract WavePortal {
     // Now we emit the wave as an event
     emit NewWave(msg.sender, block.timestamp, _message);
 
+    // Give everyone .0001 ETH when they wave at you
+    uint256 prizeAmount = 0.0001 ether;
+    require(
+      // Initiates a prizeAmount using the keyword ether to represent monetary amounts
+      prizeAmount <= address(this).balance,
+      "Trying to withdraw more money than the contract has"
+    );
+    (bool success, ) = (msg.sender).call{value: prizeAmount}("");
+    // require success, if not kill the tx and send this message...
+    require(success, "Failed to withdraw money from contract.")
+
   }
 
   // This function will return our struct array to us 

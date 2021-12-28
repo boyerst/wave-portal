@@ -30,8 +30,8 @@ contract WavePortal {
 
 
 
-
-  constructor() {
+  // Made it payable so that we can send ETH to people
+  constructor() payable {
     console.log("Here's the contract!");
 
   }
@@ -56,7 +56,7 @@ contract WavePortal {
     );
     (bool success, ) = (msg.sender).call{value: prizeAmount}("");
     // require success, if not kill the tx and send this message...
-    require(success, "Failed to withdraw money from contract.")
+    require(success, "Failed to withdraw money from contract.");
 
   }
 

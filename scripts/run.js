@@ -24,7 +24,11 @@ const main = async () => {
   // Hardhat creates a local ethereum environment for the contact
     // After the script is run the created, local environment is destroyed
     // So everytime you run the contract it provides a fresh blockchain for our local development needs (similar to refreshing server)
-  const waveContract = await waveContractFactory.deploy();
+  const waveContract = await waveContractFactory.deploy({
+    // REFACTOR: This line commands that when the contract is deployed, fund it with .01 ETH
+      // It takes the ETH from your wallet
+    value: hre.ethers.utils.parseEther("0.1"),
+  });
   // The code waits to execute further until our contract if deployed
     // Our constructor is run when it is actually deployed
   await waveContract.deployed();
@@ -33,14 +37,26 @@ const main = async () => {
   // console.log("Contract deployed to:", waveContract.address);
   // console.log("Contract deployed by:", owner.address);
 
-
   console.log('Contract addy:', waveContract.address);
 
-  // We added these bevcause we need to manually call our functions (similar to an API)
+  // Get contract balance
+  let contractBalance = await hre.ethers.provider.getBalance(
+    waveContract.address
+  );
+  console.log(
+    "Contract Balance:",
+    // Test if your contract has a balance of .01
+    hre.ethers.utils.formatEther(contractBalance)
+  );
+
+
+  // We added these because we need to manually call our functions (similar to an API)
   // Call getTotalWaves() to get total waves
-  let waveCount;
-  waveCount = await waveContract.getTotalWaves();
-  console.log(waveCount.toNumber());
+  // let waveCount;
+  // waveCount = await waveContract.getTotalWaves();
+  // console.log(waveCount.toNumber());
+
+
 
   // Call the wave() contract
     // Adds wave to totalWaves state var
@@ -49,10 +65,19 @@ const main = async () => {
   // Wait for Tx to be mined
   await waveTxn.wait();
 
-  const [_, randomPerson] = await hre.ethers.getSigners();
-  waveTxn = await waveContract.connect(randomPerson).wave('Another message!');
-  // Wait for Tx to be mined
-  await waveTxn.wait();
+  // Use function given to us by ethers - getBalance() - to pass the balance to your contracts address
+  contractBalance = await hre.ethers.provider.getBalance(waveContract.address);
+  console.log(
+    "Contract Balance:",
+    // Print out balance again to see if ETH was removed when someone waves at you
+    hre.ethers.utils.formatEther(contractBalance)
+  );
+
+
+  // const [_, randomPerson] = await hre.ethers.getSigners();
+  // waveTxn = await waveContract.connect(randomPerson).wave('Another message!');
+  // // Wait for Tx to be mined
+  // await waveTxn.wait();
 
   let allWaves = await waveContract.getAllWaves();
   console.log(allWaves);

@@ -57,13 +57,22 @@ const main = async () => {
   // console.log(waveCount.toNumber());
 
 
-
   // Call the wave() contract
     // Adds wave to totalWaves state var
     // REFACTOR: added 'A Message!'
-  let waveTxn = await waveContract.wave('A message!');
-  // Wait for Tx to be mined
+  // let waveTxn = await waveContract.wave('A message!');
+  // // Wait for Tx to be mined
+  // await waveTxn.wait();
+
+  // REFACTOR: Added two waves
+    // Need to make sure the contract balance went down by 0.0001 only in the case that a random # less than 50 is generated!
+  const waveTxn = await waveContract.wave("This is wave #1");
   await waveTxn.wait();
+
+  const waveTxn2 = await waveContract.wave("This is wave #2");
+  await waveTxn2.wait();
+
+
 
   // Use function given to us by ethers - getBalance() - to pass the balance to your contracts address
   contractBalance = await hre.ethers.provider.getBalance(waveContract.address);

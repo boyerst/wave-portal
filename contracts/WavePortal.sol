@@ -10,6 +10,9 @@ contract WavePortal {
   // State var initialized to 0 (permanent in contact storage)
   uint256 totalWaves;
 
+  // Seed used to generate random number to deteremine prize winning wavers
+  uint256 private seed;
+
   // Wave event, emits in wave function
   event NewWave(address indexed from, uint256 timestamp, string message);
 

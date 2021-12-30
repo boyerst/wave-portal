@@ -30,16 +30,35 @@ contract WavePortal {
     // This will hold all of our waves
   Wave[] waves;
 
+  // Added a mapping that stores the time the user last waved (to prevent spam waving)
+    // Mappings associate - here we are associating an address with a number!
+    // mapping(at the wavers address => stores a time as uint256) public <time user last waved>
+  mapping(address => uint256) public lastWavedAt;
 
   // Made it payable so that we can send ETH to people
   constructor() payable {
     console.log("Here's the contract!");
+    // Here we set the initial seed
+    seed = (block.timestamp + block.difficulty) % 100;
   }
 
 
 
   // REFACTOR: Now requires a string called _message that the users will write to us from the from end
   function wave(string memory _message) public {
+    // Here we make ensure that the last time the user waved + 15 minutes is less than the current timestamp
+      // If not they will have to continue to wait for the cool down
+      // EX: 10:00 + 15 < 10:10 <- NO GO
+    require(
+      lastWavedAt[msg.sender] + 15 minutes < block.timestamp, 
+      "Wait 15m"
+    );
+
+    // Here we update the current "last waved" timestamp we have for the user
+      // By updating the MAPPING
+    lastWavedAt[msg.sender] = block.timestamp;
+
+
     // Assignment operator (Add and Assignment) adds R operand to L and assigns result to L operand
     totalWaves += 1;
     console.log("%s has waived!", msg.sender, _message);

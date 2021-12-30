@@ -50,8 +50,8 @@ contract WavePortal {
       // If not they will have to continue to wait for the cool down
       // EX: 10:00 + 15 < 10:10 <- NO GO
     require(
-      lastWavedAt[msg.sender] + 15 minutes < block.timestamp, 
-      "Wait 15m"
+      lastWavedAt[msg.sender] + 30 seconds < block.timestamp, 
+      "HOLD UP! You must wait 30 seconds before waving again!""
     );
 
     // Here we update the current "last waved" timestamp we have for the user
